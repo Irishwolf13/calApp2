@@ -208,16 +208,29 @@ const InfiniteScrollCalendar: React.FC = () => {
       setFirstSelectedDate(myDate);
   
     } else if (firstSelectedDate && !secondSelectedDate) {
-      // Select as the second date
-      setSecondSelectedDate(myDate);
+      if (myDate < firstSelectedDate) {
+        // Swap dates if the new date is earlier than the first selected date
+        setSecondSelectedDate(firstSelectedDate);
+        setFirstSelectedDate(myDate);
+      } else {
+        // Select as the second date
+        setSecondSelectedDate(myDate);
+      }
   
     } else if (firstSelectedDate && secondSelectedDate) {
       // If both dates are already selected, update the second date with the new selection
-      setSecondSelectedDate(myDate);
+      if (myDate < firstSelectedDate) {
+        // Swap dates if the new date is earlier than the first selected date
+        setSecondSelectedDate(firstSelectedDate);
+        setFirstSelectedDate(myDate);
+      } else {
+        setSecondSelectedDate(myDate);
+      }
     }
   
     console.log(`Clicked on date: ${myDate}`);
   };
+  
 
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
