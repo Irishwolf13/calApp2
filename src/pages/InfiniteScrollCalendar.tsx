@@ -7,6 +7,8 @@ const InfiniteScrollCalendar: React.FC = () => {
   const [currentMonthYear, setCurrentMonthYear] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true); // Manage loading state
   const [fadeOut, setFadeOut] = useState(false); // Manage fade-out state
+  const [firstSelectedDate, setFirstSelectedDate] = useState<Date | null>(null);
+  const [secondSelectedDate, setSecondSelectedDate] = useState<Date | null>(null);
 
   useEffect(() => {
     const initialDates = generateInitialDates();
@@ -146,24 +148,75 @@ const InfiniteScrollCalendar: React.FC = () => {
 
   const renderCalendarCell = ({ date, key }: { date: Date; key: string }) => {
     const dayOfWeek = date.getDay();
+    const today = new Date();
     const isCurrentDay =
-      date.getDate() === new Date().getDate() &&
-      date.getMonth() === new Date().getMonth() &&
-      date.getFullYear() === new Date().getFullYear();
+      date.getDate() === today.getDate() &&
+      date.getMonth() === today.getMonth() &&
+      date.getFullYear() === today.getFullYear();
+  
+    const isFirstSelectedDate = firstSelectedDate && 
+      date.getDate() === firstSelectedDate.getDate() &&
+      date.getMonth() === firstSelectedDate.getMonth() &&
+      date.getFullYear() === firstSelectedDate.getFullYear();
+  
+    const isSecondSelectedDate = secondSelectedDate && 
+      date.getDate() === secondSelectedDate.getDate() &&
+      date.getMonth() === secondSelectedDate.getMonth() &&
+      date.getFullYear() === secondSelectedDate.getFullYear();
+  
+    // Check if the date is between the first and second selected dates
+    const isBetweenSelectedDates = firstSelectedDate && secondSelectedDate &&
+      ((date > firstSelectedDate && date < secondSelectedDate) || (date > secondSelectedDate && date < firstSelectedDate));
+  
     const style = {
       gridColumnStart: dayOfWeek + 1,
     };
-
+  
     return (
-      <div
+      <button
         key={key}
         id={key}
-        className={`calendar-cell ${isCurrentDay ? 'current-day' : ''}`}
+        className={`calendar-cell ${isCurrentDay ? 'current-day' : ''} ${isFirstSelectedDate ? 'first-selected' : ''} ${isSecondSelectedDate ? 'second-selected' : ''} ${isBetweenSelectedDates ? 'between-selected' : ''} ${isCurrentDay && isBetweenSelectedDates ? 'current-day-between' : ''}`} // Add a new class for combined condition
         style={style}
+        onClick={() => dateClicked(date)}
       >
         {!isNaN(date.getDate()) ? date.getDate() : ''}
-      </div>
+      </button>
     );
+  };  
+  
+  const dateClicked = (myDate: Date) => {
+    if (firstSelectedDate && 
+      myDate.getDate() === firstSelectedDate.getDate() &&
+      myDate.getMonth() === firstSelectedDate.getMonth() &&
+      myDate.getFullYear() === firstSelectedDate.getFullYear()) {
+      
+      // Deselect both first and second selected dates
+      setFirstSelectedDate(null);
+      setSecondSelectedDate(null);
+      
+    } else if (secondSelectedDate && 
+      myDate.getDate() === secondSelectedDate.getDate() &&
+      myDate.getMonth() === secondSelectedDate.getMonth() &&
+      myDate.getFullYear() === secondSelectedDate.getFullYear()) {
+  
+      // Deselect the second selected date
+      setSecondSelectedDate(null);
+  
+    } else if (!firstSelectedDate) {
+      // Select as the first date
+      setFirstSelectedDate(myDate);
+  
+    } else if (firstSelectedDate && !secondSelectedDate) {
+      // Select as the second date
+      setSecondSelectedDate(myDate);
+  
+    } else if (firstSelectedDate && secondSelectedDate) {
+      // If both dates are already selected, update the second date with the new selection
+      setSecondSelectedDate(myDate);
+    }
+  
+    console.log(`Clicked on date: ${myDate}`);
   };
 
   const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -172,7 +225,7 @@ const InfiniteScrollCalendar: React.FC = () => {
     <div className="calendar-page">
       {isLoading && (
         <div className={`loading-overlay ${fadeOut ? 'fade-out' : ''}`}>
-          <div className="loading-spinner">Loading...</div>
+          <div className="loading-spinner"></div>
         </div>
       )}
       <button onClick={scrollToToday} className="scroll-to-today-button">Go to Today</button>
