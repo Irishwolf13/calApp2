@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import './InfiniteScrollCalendar.css';
 import CalendarCell from './CalendarCell'; // Ensure correct path
+import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 
 const InfiniteScrollCalendar: React.FC = () => {
   const [dates, setDates] = useState<{ date: Date; key: string }[]>([]);
@@ -206,25 +207,46 @@ const InfiniteScrollCalendar: React.FC = () => {
   );
 
   return (
-    <div className="calendar-page">
-      {isLoading && (
-        <div className={`loading-overlay ${fadeOut ? 'fade-out' : ''}`}>
-          <div className="loading-spinner"></div>
-        </div>
-      )}
-      <button onClick={scrollToToday} className="scroll-to-today-button">Go to Today</button>
-      <div className="month-year">{currentMonthYear}</div>
-      <div className="week-header">
-        {daysOfWeek.map((day, index) => (
-          <div key={index} className="week-day">
-            {day}
+    <IonPage>
+    <IonHeader>
+      <IonToolbar>
+        <IonButtons>
+          <IonBackButton></IonBackButton>
+        </IonButtons>
+        <IonButtons slot="secondary">
+          <IonButton onClick={scrollToToday} className="scroll-to-today-button">Go to Today</IonButton>
+        </IonButtons>
+      </IonToolbar>
+    </IonHeader>
+    <IonContent fullscreen>
+      <IonHeader collapse="condense">
+        <IonToolbar>
+          <IonButtons>
+            <IonBackButton></IonBackButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+        <div className="calendar-page">
+        {isLoading && (
+          <div className={`loading-overlay ${fadeOut ? 'fade-out' : ''}`}>
+            <div className="loading-spinner"></div>
           </div>
-        ))}
+        )}
+        
+        <div className="month-year">{currentMonthYear}</div>
+        <div className="week-header">
+          {daysOfWeek.map((day, index) => (
+            <div key={index} className="week-day">
+              {day}
+            </div>
+          ))}
+        </div>
+        <div ref={calendarRef} className="calendar-grid" onScroll={handleScroll}>
+          {dates.map(renderCalendarCell)}
+        </div>
       </div>
-      <div ref={calendarRef} className="calendar-grid" onScroll={handleScroll}>
-        {dates.map(renderCalendarCell)}
-      </div>
-    </div>
+    </IonContent>
+  </IonPage>
   );
 };
 

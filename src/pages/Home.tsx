@@ -1,7 +1,14 @@
+import { useHistory } from 'react-router-dom';
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import './Home.css';
 
 const Home: React.FC = () => {
+  const history = useHistory();
+
+  const handleButtonClick = () => {
+    history.push('/cal');
+  };
+
   return (
     <IonPage>
       <IonHeader>
@@ -15,7 +22,7 @@ const Home: React.FC = () => {
             <IonTitle size="large">Blank</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonButton>Frank</IonButton>
+        <IonButton onClick={handleButtonClick}>Frank</IonButton>
       </IonContent>
     </IonPage>
   );
