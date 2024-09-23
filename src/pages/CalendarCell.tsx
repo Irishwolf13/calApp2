@@ -2,14 +2,13 @@ import React from 'react';
 
 interface CalendarCellProps {
   date: Date;
-  key: string;
   firstSelectedDate: Date | null;
   secondSelectedDate: Date | null;
   today: Date;
   handleClick: (date: Date) => void;
 }
 
-const CalendarCell: React.FC<CalendarCellProps> = ({ date, key, firstSelectedDate, secondSelectedDate, today, handleClick }) => {
+const CalendarCell: React.FC<CalendarCellProps> = ({ date, firstSelectedDate, secondSelectedDate, today, handleClick }) => {
   const dayOfWeek = date.getDay();
   const isCurrentDay =
     date.getDate() === today.getDate() &&
@@ -34,13 +33,20 @@ const CalendarCell: React.FC<CalendarCellProps> = ({ date, key, firstSelectedDat
   };
 
   return (
-    <button
-      id={key}
+    <button 
+      onClick={() => handleClick(date)}
       className={`calendar-cell ${isCurrentDay ? 'current-day' : ''} ${isFirstSelectedDate ? 'first-selected' : ''} ${isSecondSelectedDate ? 'second-selected' : ''} ${isBetweenSelectedDates ? 'between-selected' : ''} ${isCurrentDay && isBetweenSelectedDates ? 'current-day-between' : ''}`}
       style={style}
-      onClick={() => handleClick(date)}
     >
-      {!isNaN(date.getDate()) ? date.getDate() : ''}
+      <div className='cellDateLocation'>
+        {!isNaN(date.getDate()) ? (
+          <>
+            {date.getDate() === 1 && ` ${date.toLocaleString('default', { month: 'long' })}`}
+            {` `}
+            {date.getDate()}
+          </>
+        ) : ''}
+      </div>
     </button>
   );
 };

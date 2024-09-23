@@ -1,3 +1,7 @@
+:root {
+  --simulated-scrollbar-width: 15px; /* Adjust this value to match the typical scrollbar width */
+}
+
 .calendar-page {
   display: flex;
   flex-direction: column;
@@ -55,11 +59,12 @@
   grid-template-columns: repeat(7, 1fr);
   gap: 10px;
   width: 90%;
-  max-width: 800px;
   text-align: center;
   font-weight: bold;
   color: black;
   margin-bottom: 10px;
+  padding-right: var(--simulated-scrollbar-width); /* Add padding to simulate scrollbar space */
+  box-sizing: border-box; /* Ensure padding does not alter overall width */
 }
 
 .week-day {
@@ -73,7 +78,6 @@
   grid-template-columns: repeat(7, 1fr); /* 7 columns for days */
   gap: 10px;
   width: 90%;
-  max-width: 800px;
   height: 80vh;
   overflow-y: auto;
 }
@@ -81,13 +85,13 @@
 .calendar-cell {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: top;
   background-color: white;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
   font-size: 18px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 100px;
+  height: 10vh;
   text-align: center;
   color: black;
   transition: background-color 0.3s;
