@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
-import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react';
-import CalendarCell from '../components/CalendarCell/CalendarCell';
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import CalendarCell from '../../components/CalendarCell/CalendarCell';
 import './InfiniteScrollCalendar.css';
 
 const InfiniteScrollCalendar: React.FC = () => {
