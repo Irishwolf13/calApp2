@@ -1,4 +1,5 @@
 import React from 'react';
+import './CalendarCell.css';
 
 interface CalendarCellProps {
   date: Date;

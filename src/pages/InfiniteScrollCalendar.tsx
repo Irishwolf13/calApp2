@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import { IonBackButton, IonButtons, IonContent, IonHeader, IonPage, IonToolbar } from '@ionic/react';
+import CalendarCell from '../components/CalendarCell/CalendarCell';
 import './InfiniteScrollCalendar.css';
-import CalendarCell from './CalendarCell'; // Ensure correct path
-import { IonBackButton, IonButton, IonButtons, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 
 const InfiniteScrollCalendar: React.FC = () => {
   const [dates, setDates] = useState<{ date: Date; key: string }[]>([]);
   const calendarRef = useRef<HTMLDivElement>(null);
-  const [currentMonthYear, setCurrentMonthYear] = useState<string>('');
+  // const [currentMonthYear, setCurrentMonthYear] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true); // Manage loading state
   const [fadeOut, setFadeOut] = useState(false); // Manage fade-out state
   const [firstSelectedDate, setFirstSelectedDate] = useState<Date | null>(null);
@@ -94,47 +94,40 @@ const InfiniteScrollCalendar: React.FC = () => {
       const date = firstVisibleDate.date;
       const month = date.toLocaleString('default', { month: 'long' });
       const year = date.getFullYear();
-      setCurrentMonthYear(`${month} ${year}`);
+      // setCurrentMonthYear(`${month} ${year}`);
     }
+  };
+
+  const pruneOldDates = (newStartDate: Date) => {
+    setDates(prevDates => prevDates.filter(dateObj => dateObj.date >= newStartDate));
+  };
+
+  const pruneFutureDates = (newEndDate: Date) => {
+    setDates(prevDates => prevDates.filter(dateObj => dateObj.date <= newEndDate));
   };
 
   const preloadPreviousDates = () => {
     if (dates.length === 0) return;
+
     const firstDate = dates[0].date;
     const newStartDate = new Date(firstDate.getFullYear(), firstDate.getMonth() - 1, 1);
     const newEndDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), 0);
     const newDates = generateDatesWithinRange(newStartDate, newEndDate);
 
     setDates(prev => [...newDates, ...prev]);
+    pruneFutureDates(new Date(firstDate.getFullYear(), firstDate.getMonth() + 3, 0));
   };
 
   const preloadNextDates = () => {
     if (dates.length === 0) return;
+
     const lastDate = dates[dates.length - 1].date;
     const newStartDate = new Date(lastDate.getFullYear(), lastDate.getMonth() + 1, 1);
     const newEndDate = new Date(lastDate.getFullYear(), lastDate.getMonth() + 2, 0);
     const newDates = generateDatesWithinRange(newStartDate, newEndDate);
 
     setDates(prev => [...prev, ...newDates]);
-  };
-
-  const scrollToToday = () => {
-    if (calendarRef.current) {
-      const todayElement = calendarRef.current.querySelector('.current-day');
-      if (todayElement) {
-        const todayTop = todayElement.getBoundingClientRect().top;
-        const calendarTop = calendarRef.current.getBoundingClientRect().top;
-
-        const offset = todayTop - calendarTop - (calendarRef.current.clientHeight / 2) + (todayElement.clientHeight / 2);
-
-        calendarRef.current.scrollTo({
-          top: calendarRef.current.scrollTop + offset,
-          behavior: 'smooth',
-        });
-      } else {
-        console.log("Today's date element not found");
-      }
-    }
+    pruneOldDates(new Date(lastDate.getFullYear(), lastDate.getMonth() - 2, 1));
   };
 
   const scrollHalfwayDown = () => {
@@ -213,9 +206,6 @@ const InfiniteScrollCalendar: React.FC = () => {
         <IonButtons>
           <IonBackButton></IonBackButton>
         </IonButtons>
-        <IonButtons slot="secondary">
-          <IonButton onClick={scrollToToday} className="scroll-to-today-button">Go to Today</IonButton>
-        </IonButtons>
       </IonToolbar>
     </IonHeader>
     <IonContent fullscreen>
@@ -232,8 +222,6 @@ const InfiniteScrollCalendar: React.FC = () => {
             <div className="loading-spinner"></div>
           </div>
         )}
-        
-        <div className="month-year">{currentMonthYear}</div>
         <div className="week-header">
           {daysOfWeek.map((day, index) => (
             <div key={index} className="week-day">

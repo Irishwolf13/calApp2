@@ -63,7 +63,6 @@
   font-weight: bold;
   color: black;
   margin-bottom: 10px;
-  padding-right: var(--simulated-scrollbar-width); /* Add padding to simulate scrollbar space */
   box-sizing: border-box; /* Ensure padding does not alter overall width */
 }
 
@@ -79,64 +78,25 @@
   gap: 10px;
   width: 90%;
   height: 80vh;
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
-.calendar-cell {
-  display: flex;
-  justify-content: center;
-  align-items: top;
-  background-color: white;
-  border: 1px solid #e0e0e0;
-  border-radius: 5px;
-  font-size: 18px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 10vh;
-  text-align: center;
-  color: black;
-  transition: background-color 0.3s;
-  cursor: pointer;
+/* Hide scrollbar for Chrome, Safari and Opera */
+.calendar-grid::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
-.current-day {
-  background-color: #80cf83 !important;
-  color: rgb(0, 0, 0) !important;
-}
-/* When current day is the first selected day */
-.current-day.first-selected {
-  background-color: #76a0c7 !important;
-  color: white !important;
+/* Hide scrollbar for IE, Edge */
+.calendar-grid {
+  -ms-overflow-style: none;  /* IE and Edge */
 }
 
-/* When current day is the second selected day */
-.current-day.second-selected {
-  background-color: #96b8d8 !important;
-  color: white !important;
+/* Hide scrollbar for Firefox */
+.calendar-grid {
+  scrollbar-width: none;  /* Firefox */
 }
-.current-day-between {
-  background-color:  #7eebe5 !important; /* Ensure it overrides other styles */
-  color: red; /* Adjust text color if necessary */
-}
-
-.first-selected {
-  background-color: #4d8bc5;
-  color: white;
-}
-
-.second-selected {
-  background-color: #4d8bc5;
-  color: white;
-}
-.between-selected {
-  background-color:  #b4d0eb
-}
-
-.empty-cell {
-  background-color: transparent;
-  border: none;
-  box-shadow: none;
-}
-
+/* 
 .scroll-to-today-button {
   margin-bottom: 10px;
   padding: 10px;
@@ -149,4 +109,4 @@
 
 .scroll-to-today-button:hover {
   background-color: #0056b3;
-}
+} */

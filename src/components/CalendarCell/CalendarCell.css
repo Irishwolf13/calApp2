@@ -1,0 +1,53 @@
+.calendar-cell {
+  display: flex;
+  justify-content: center;
+  align-items: top;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  font-size: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  height: 10vh;
+  text-align: center;
+  color: black;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.current-day {
+  background-color: #80cf83 !important;
+  color: rgb(0, 0, 0) !important;
+}
+/* When current day is the first selected day */
+.current-day.first-selected {
+  background-color: #76a0c7 !important;
+  color: white !important;
+}
+
+/* When current day is the second selected day */
+.current-day.second-selected {
+  background-color: #96b8d8 !important;
+  color: white !important;
+}
+.current-day-between {
+  background-color:  #7eebe5 !important;
+  color: red;
+}
+
+.first-selected {
+  background-color: #4d8bc5;
+  color: white;
+}
+
+.second-selected {
+  background-color: #4d8bc5;
+  color: white;
+}
+
+.between-selected {
+  background-color: #b4d0eb;
+}
+
+.cellDateLocation {
+  display: inline-block;
+}
